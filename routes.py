@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Header
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 import crud
 import schemas
 import models
@@ -12,8 +12,14 @@ router = APIRouter()
 # Store master password in memory (in production, use proper session management)
 current_master_password = None
 
-def get_current_master_password():
+def get_current_master_password(x_master_password: Optional[str] = Header(None)):
     global current_master_password
+    
+    # First try to get from header
+    if x_master_password:
+        return x_master_password
+    
+    # Fall back to global variable
     if not current_master_password:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
