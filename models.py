@@ -44,7 +44,7 @@ class Credential(Base):
     
     # Relationships
     category = relationship("Category", back_populates="credentials")
-    password_history = relationship("PasswordHistory", back_populates="credential")
+    password_history = relationship("PasswordHistory", back_populates="credential", cascade="all, delete-orphan")
 
 class CreditCard(Base):
     __tablename__ = "credit_cards"
